@@ -12,7 +12,7 @@ field_names = ['Company Name', 'Industry', 'Last Price', 'Change', '%Chg', 'Mkt 
 
 PERC_CHNG_IDX = 4
 COMP_NAME_IDX = 0
-CHNG_MAGNITUDE = 2.00
+CHNG_MAGNITUDE = 0.5
 CHECK_INTERVAL = 4  	#4*30sec = 2 mins
 
 data = []
