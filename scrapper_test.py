@@ -9,13 +9,15 @@ nltk.download('punkt')
 main_news_file = open('main_news.csv', 'w')
 sub_news_file = open('sub_news.csv', 'w')
 
-field_names = ['Title', 'URL', 'Datetime', 'Summary']
+field_names = ['Title', 'URL', 'Datetime', 'Summary', 'Key Sentences']
 
 main_news_writer = csv.DictWriter(main_news_file, field_names)
 sub_news_writer = csv.DictWriter(sub_news_file, field_names)
 
 url = 'https://news.google.com/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx6TVdZU0FtVnVHZ0pKVGlnQVAB?hl=en-IN&gl=IN&ceid=IN%3Aen'
 leading_news_url = 'https://news.google.com'
+
+keywords = ['surge', 'acquisitions', 'IPO']
 
 connection = urlopen(url)
 
@@ -39,7 +41,13 @@ for news in list(section.children)[:10]:
 		article.download()
 		article.parse()
 		article.nlp()
-		main_news_writer.writerow({'Title': main_news_heading, 'URL': main_news_url, 'Datetime': article.publish_date, 'Summary': article.summary})
+		key_sentences = ''
+		for sentence in article.text.split('\n'):
+			for word in keywords:
+				if word in sentence:
+					key_sentences = key_sentences + '\n' + sentence
+					break
+		main_news_writer.writerow({'Title': main_news_heading, 'URL': main_news_url, 'Datetime': article.publish_date, 'Summary': article.summary, 'Key Sentences': key_sentences})
 
 	except:
 		pass
@@ -52,8 +60,13 @@ for news in list(section.children)[:10]:
 			article.download()
 			article.parse()
 			article.nlp()
-
-			sub_news_writer.writerow({'Title': sub_news_heading, 'URL': sub_news_url, 'Datetime': article.publish_date, 'Summary': article.summary})
+			key_sentences = ''
+			for sentence in article.text.split('\n'):
+				for word in keywords:
+					if word in sentence:
+						key_sentences = key_sentences + '\n' + sentence
+						break
+			sub_news_writer.writerow({'Title': sub_news_heading, 'URL': sub_news_url, 'Datetime': article.publish_date, 'Summary': article.summary, 'Key Sentences': key_sentences})
 		
 		except:
 			pass
